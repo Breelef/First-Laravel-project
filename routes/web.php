@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostsController;
 use App\Models\Post;
+use App\Models\User;
+use App\Models\Country;
+use App\Models\Photo;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +17,112 @@ use App\Models\Post;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+
+
+
+//Polymorphic Relations
+
+Route::get('/user/photos', function(){
+   $user = User::find(1);
+   foreach ($user->photos as $photo){
+       return $photo;
+   }
+
+});
+
+Route::get('/post/photos', function(){
+    $post = Post::find(1);
+    foreach ($post->photos as $photo){
+        return $photo->path;
+    }
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+
+
+
+
+
+
+//Accessing the intermediate table / pivot
+Route::get('/user/pivot', function(){
+    $user = User::find(1);
+    foreach ($user->roles as $role){
+        echo $role->pivot->created_at;
+    }
+
+
+
+
+});
+//Getting all posts from a specific country
+Route::get('/user/country', function(){
+    $country = Country::find(1);
+
+    foreach ($country->posts as $post){
+        echo $post->title . '<br>';
+    }
+});
+
+
+
+
+
+
+//Many to Many
+Route::get('/user/{id}/role', function($id){
+    $user = User::find($id)->roles()->orderBy('id', 'desc')->get();
+
+    return $user;
+    foreach ($user->roles as $role){
+        return $role->name;
+    }
+
+});
+
+ //One To Many
+Route::get('/posts', function() {
+    $user = User::find(1);
+
+    foreach ($user->posts as $post){
+        echo $post->title . "<br>";
+    }
+});
+
+
+ // One to One
+Route::get('/user/{id}/post', function($id){
+    return User::find($id)->post;
+});
+
+Route::get('/post/{id}/user', function($id){
+   return Post::find($id)->user;
+});
+
 
 
 Route::get('/findwhere', function(){
@@ -46,9 +155,6 @@ Route::get('/basicinsert', function(){
 
 Route::get('/create', function(){
     Post::create(['title'=>'The delete method', 'content'=>'We want to retrieve deleted data']);
-
-
-
 
 });
 
@@ -94,7 +200,7 @@ Route::get('/forcedelete', function (){
     Post::withTrashed()->where('id', 13)->forceDelete();
 
 });
-
+*/
 
 
 
