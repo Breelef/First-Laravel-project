@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\Photo;
+use App\Models\Tag;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,26 +20,33 @@ use App\Models\Photo;
 */
 
 
+//Polymorphic many to many
 
-
-
-//Polymorphic Relations
-
-Route::get('/user/photos', function(){
-   $user = User::find(1);
-   foreach ($user->photos as $photo){
-       return $photo;
-   }
-
+Route::get('/post/tag', function (){
+    $post = Post::find(1);
+    foreach ($post->tags as $tag){
+        echo $tag->name;
+    }
 });
 
-Route::get('/post/photos', function(){
-    $post = Post::find(1);
-    foreach ($post->photos as $photo){
-        return $photo->path;
+//Retrieve the owner
+Route::get('/tag/post', function (){
+    $tag = Tag::find(2);
+    foreach($tag->posts as $post){
+        echo $post->title;
+
+
     }
 
 });
+Route::get('/tag/video', function(){
+    $tag = Tag::find(1);
+    foreach ($tag->videos as $video){
+        echo $video->name;
+
+    }
+});
+
 
 
 
@@ -63,6 +71,38 @@ Route::get('/post/photos', function(){
 
 
 
+
+
+
+
+
+
+
+
+//Polymorphic Relations
+
+Route::get('/user/photos', function(){
+   $user = User::find(1);
+   foreach ($user->photos as $photo){
+       echo $photo;
+   }
+
+});
+
+Route::get('/post/photos', function(){
+    $post = Post::find(1);
+    foreach ($post->photos as $photo){
+        echo $photo->path . '<br>';
+    }
+
+});
+
+//Polymorphic inverse relation
+
+Route::get('/photos/{id}/post', function ($id){
+        $photo = Photo::findOrFail($id);
+        return $photo->imageable;
+});
 
 
 
