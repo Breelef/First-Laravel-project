@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreatePostRequest;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class PostsController extends Controller
@@ -9,9 +11,12 @@ class PostsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($id)
+    public function index()
     {
-        return "Its working ". $id;
+
+        $posts = Post::latest()->get();
+
+        return view('posts.index', compact('posts'));
     }
 
     /**
@@ -21,15 +26,53 @@ class PostsController extends Controller
     {
         //
 
-        return "I am create method";
+        return view('posts.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreatePostRequest $request)
     {
         //
+        $input = $request->all();
+
+        if($file = $request->file('file')){
+            $name = $file->getClientOriginalName();
+
+            $file->move('images', $name);
+
+            $input['path'] = $name;
+
+        }
+
+        Post::create($input);
+
+
+//        Post::create($request->all());
+        //$input = $request->all();
+
+        //$input['title'] = $request->title;
+
+        //Post::create($request->all());
+//        $this->validate($request, [
+//           'title'=>'required'
+//        ]);
+
+//        $post = new Post();
+//
+//        $post->title = $request->title;
+//        $post->content = "THis is content";
+//        $post->user_id = 0;
+//
+//        $post->save();
+//
+//        return redirect('/posts');
+
+
+
+
+
     }
 
     /**
@@ -37,7 +80,10 @@ class PostsController extends Controller
      */
     public function show(string $id)
     {
-        return "This is the show method!". $id;
+        $post = Post::findOrFail($id);
+
+
+        return view('posts.show', compact('post'));
     }
 
     /**
@@ -46,22 +92,37 @@ class PostsController extends Controller
     public function edit(string $id)
     {
         //
+
+        $post = Post::findOrFail($id);
+
+        return view('posts.edit', compact('post'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         //
+
+        $post = Post::findOrFail($id);
+
+        $post->update($request->all());
+
+        return redirect('/posts');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
         //
+
+        Post::whereId($id)->delete();
+
+
+        return redirect('/posts');
     }
 
     public function contact(){

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Country;
 use App\Models\Photo;
 use App\Models\Tag;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,71 @@ use App\Models\Tag;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+
+Route::group(['middleware'=>'web'], function (){
+    Route::resource('/posts', PostsController::class);
+
+
+
+    Route::get('/dates', function() {
+
+        $date = new DateTime('+1 week');
+
+        echo $date->format('d-m-y');
+
+        echo "<br>";
+
+        echo Carbon::now()->addDays(10)->diffForHumans();
+
+        echo "<br>";
+
+        echo Carbon::now()->subMonths(3)->diffForHumans();
+
+    });
+
+
+
+    Route::get('/getname', function(){
+       $user = User::find(1);
+       echo $user->name;
+
+
+    });
+
+    Route::get('/setname', function(){
+        $user = User::find(1);
+       $user->name = "william";
+       $user->save();
+
+
+    });
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
 
 
 //Polymorphic many to many
@@ -46,31 +112,6 @@ Route::get('/tag/video', function(){
 
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-
-
-
 
 
 
