@@ -25,7 +25,9 @@ use Carbon\Carbon;
 Route::group(['middleware'=>'web'], function (){
     Route::resource('/posts', PostsController::class);
 
-
+    Route::get('/', function(){
+        return view('newWelcome');
+    });
 
     Route::get('/dates', function() {
 
@@ -379,3 +381,7 @@ Route::get('/find', function() {
     return $post->title;
 });
 */
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
